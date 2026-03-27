@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3 main.py)",
+      "Bash(python3 -c \":*)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "agent",
+            "if": "Bash(git commit*)",
+            "prompt": "git commit 명령이 실행되기 직전입니다. 커밋 전에 CLAUDE.md와 CHANGELOG.md를 최신 상태로 업데이트하세요.\n\n순서:\n1. `git diff --staged --stat` 와 `git diff --staged` 를 실행해서 이번 커밋에 포함된 변경사항을 파악하세요.\n2. CLAUDE.md를 읽고, '현재 개발 상태' 섹션의 버전·날짜·마지막 변경 내용이 이번 변경사항을 반영하도록 업데이트하세요.\n3. CHANGELOG.md를 읽고, 이번 변경사항을 설명하는 새 버전 항목을 맨 위에 추가하세요. 날짜는 오늘(KST 기준)로 하세요.\n4. 업데이트한 CLAUDE.md와 CHANGELOG.md를 `git add CLAUDE.md CHANGELOG.md` 로 스테이징하세요.\n\n변경사항이 없거나 CLAUDE.md·CHANGELOG.md 자체만 수정된 커밋이면 아무것도 하지 마세요.",
+            "statusMessage": "CLAUDE.md · CHANGELOG.md 자동 업데이트 중...",
+            "timeout": 60
+          }
+        ]
+      }
+    ]
+  }
+}
