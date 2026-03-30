@@ -5,6 +5,26 @@
 
 ---
 
+## [v0.4.0] 2026-03-30
+
+### 추가
+- `server.py` — 히스토리 API 추가
+  - `GET /api/history` : 히스토리 목록 반환 (날짜·실행시각·키워드 수)
+  - `GET /api/history/<date>` : 특정 날짜 상세 데이터 반환
+  - `_save_history()` : 파이프라인 실행 완료 시 `history/YYYY-MM-DD.json` 자동 저장, 최대 7개 보관
+- `result.html` — 히스토리 탭 UI 추가
+  - `최신 데이터` 탭 + 날짜별 탭 (키워드 수 배지 표시, 0개는 점선 스타일)
+  - `loadHistory()` : 서버에서 탭 목록 로드
+  - `selectTab()` / `loadHistoryDetail()` : 탭 클릭 시 해당 날짜 데이터 렌더링
+- `.claude/settings.json` — git commit 전 CLAUDE.md·CHANGELOG.md 자동 업데이트 훅 (PreToolUse agent)
+- `history/` 디렉터리 — 실행 히스토리 JSON 저장소
+
+### 수정
+- **날짜 미갱신 버그 수정**: 파이프라인 실행 결과가 0개일 때도 엑셀을 빈 DataFrame으로 덮어써 `updated_at` 갱신
+- `_run_status`에 `last_run` 필드 추가 → 파이프라인 실행 완료 시각 별도 추적
+
+---
+
 ## [v0.3.0] 2026-03-27
 
 ### 추가

@@ -6,13 +6,13 @@
 
 ---
 
-## 현재 개발 상태 (2026-03-27 기준)
+## 현재 개발 상태 (2026-03-30 기준)
 
 | 항목 | 내용 |
 |---|---|
-| 버전 | v0.3.0 |
+| 버전 | v0.4.0 |
 | 상태 | 운영 중 (기능 추가 단계) |
-| 마지막 주요 변경 | 로컬 웹 대시보드 + 업데이트 버튼 추가 |
+| 마지막 주요 변경 | 히스토리 기능 추가 + 날짜 미갱신 버그 수정 |
 | 다음 예정 작업 | 없음 (사용자 요청 대기) |
 
 ---
@@ -33,6 +33,8 @@ naver blog extractor/
 │
 ├── result.html                    ← 라이브 대시보드 (server.py와 연동, API fetch)
 ├── golden_keywords_report.html    ← 정적 HTML 리포트 (agent.py 실행 시 생성)
+│
+├── history/                       ← 실행 히스토리 (YYYY-MM-DD.json, 최대 7개 보관)
 │
 ├── input_keywords.xlsx            ← 시드 키워드 입력 파일 (최대 100개)
 └── golden_keywords_output.xlsx    ← 결과 출력 파일 (실행 후 생성)
@@ -130,10 +132,13 @@ FINANCE_CATEGORIES = {
 | GET | `/` | result.html 서빙 |
 | GET | `/api/data` | golden_keywords_output.xlsx → JSON 반환 |
 | POST | `/api/run` | main.run_pipeline() 백그라운드 실행 시작 |
-| GET | `/api/status` | 실행 상태 조회 (`running`, `message`) |
+| GET | `/api/status` | 실행 상태 조회 (`running`, `message`, `last_run`) |
+| GET | `/api/history` | 히스토리 목록 (날짜·실행시각·키워드 수) |
+| GET | `/api/history/<date>` | 특정 날짜 히스토리 상세 (`YYYY-MM-DD` 형식) |
 
 - 포트: **8765** (macOS AirPlay가 5000 사용 중이므로 변경됨)
-- 동시 실행 방지: `_run_lock` + `_run_status["running"]` 플래그
+- 동시 실행 방지: `_run_status["running"]` 플래그
+- 히스토리 저장: 실행 완료 시 `history/YYYY-MM-DD.json` 저장, 최대 7개 보관 (초과 시 오래된 파일 삭제)
 
 ---
 
